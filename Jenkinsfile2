@@ -1,0 +1,33 @@
+pipeline{
+    agent any
+    stages{
+        stage("scm checkout"){
+            steps{
+                git credentialsId: 'github', 
+                url: 'https://github.com/khalidDeshmuq/my-app.git'
+            }
+        }
+        
+        stage("maven build"){
+            steps{
+              sh 'mvn clean package'   
+            }
+        }
+        
+        stage("nexusuploader"){
+            steps{
+                nexusArtifactUploader artifacts: 
+                [
+                    [artifactId: 'myweb', classifier: '', file: 'target/myweb-0.0.14.war', type: 'war']
+                    ], 
+                    credentialsId: '', 
+                    groupId: 'in.javahome', 
+                    nexusUrl: '172.31.1.106:8081', 
+                    nexusVersion: 'nexus3', 
+                    protocol: 'http', 
+                    repository: 'khalis-release', 
+                    version: '0.014'
+            }
+        }
+    }
+}
