@@ -1,0 +1,17 @@
+pipeline{
+    agent any
+    stages{
+        stage("scm checkout"){
+            steps{
+                git credentialsId: 'github', 
+                url: 'https://github.com/khalidDeshmuq/my-app.git'
+            }
+        }
+        
+        stage("maven build"){
+            steps{
+              sh 'mvn clean package'   
+            }
+        }
+     }
+ }
